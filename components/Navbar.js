@@ -9,9 +9,10 @@ import Image from "next/image"
 
 {/* <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfwolAaPkgpsAyeI8AOPK2-8fndpzEqw5JoD2S28PihkM2zCQ/viewform?embedded=true" width="640" height="1083" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe> */}
 const navigation = [
-  { name: 'Products', href: '#', current: false,},
-  { name: 'Developers', href: '#', current: false,},
-  { name: 'Pricing', href: '#', current: false,},
+  { name: 'Product', href: 'Products', current: false,},
+  { name: 'Developer', href: 'Developers', current: false,},
+  { name: 'Pricing', href: 'Pricing', current: false,},
+  { name: 'Blog', href: 'Pricing', current: false,},
 ]
 
 function classNames(...classes) {
@@ -25,8 +26,18 @@ export default function Navbar() {
     
     const goToPage = (page) => {
         switch(page) {
-            case "Docs":
-                router.push('/docs');
+            case "Product":
+              router.push('/products/');
+              break;
+            case "Developer":
+              router.push('/docs/');
+              break;
+            case "Pricing":
+              router.push('/pricing');
+              break;
+            case "Blog":
+              router.push('/blog/');
+              break;
             case "Sign In":
               router.push('/auth/signin');
               break;
@@ -70,11 +81,10 @@ export default function Navbar() {
                     {navigation.map((item) => (
                           <a
                           key={item.name}
-                          href={item.href}
                           onClick={() => goToPage(item.name)}
                           className={classNames(
                             item.current ? 'font-bold' : 'text-black  font-bold',
-                            'px-3 py-2 rounded-md'
+                            'px-3 py-2 rounded-md cursor-pointer'
                           )}
                           aria-current={item.current ? 'page' : undefined}
                         >

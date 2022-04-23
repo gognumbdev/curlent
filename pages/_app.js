@@ -11,6 +11,12 @@ const progress = new ProgressBar({
   className:'z-50',
   delay:100,
 });
+import {
+  getChainOptions,
+  StaticWalletProvider,
+  WalletControllerChainOptions,
+  WalletProvider,
+} from '@terra-money/wallet-provider';
 
 const {store,persistor} = getStore();
 
@@ -19,7 +25,11 @@ Router.events.on('routeChangeComplete',progress.finish);
 Router.events.on('routeChangeError',progress.finish);
 
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...appProps }) {
+  
+  if ([`/auth/signin`,`/auth/signup`].includes(appProps.router.pathname))
+  return <Component {...pageProps} />;
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
@@ -29,6 +39,20 @@ function MyApp({ Component, pageProps }) {
       </PersistGate>
     </Provider>
   )
+
+   
+
+  // return (
+  //   <Provider store={store}>
+  //     <PersistGate persistor={persistor}>
+  //       <Layout>
+  //         <Component {...pageProps} />
+  //       </Layout>
+  //     </PersistGate>
+  //   </Provider>
+  // )
+
+  
 }
 
 export default MyApp

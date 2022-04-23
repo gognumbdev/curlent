@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import LandingBanner from '../components/Present/Landing/LandingBanner'
 import LandingBody from '../components/Present/Landing/LandingBody'
 import CurlentFull from '../public/logo/CurlentFull.png'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div>
       <Head>
@@ -17,6 +18,14 @@ export default function Home() {
       <main className='grid grid-cols-1'>
         <LandingBanner />
         <LandingBody />
+
+        <button 
+          className='text-2xl border-2 bg-amber-300 font-medium w-fit p-5 place-self-center rounded mb-32'
+          onClick={() => router.push("/payment/checkout/preview")}
+        >
+            Try Curlent Payment now
+        </button>
+
 
       </main>
 

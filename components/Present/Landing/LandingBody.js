@@ -28,9 +28,8 @@ const LandingBanner = () => {
         </h1>
 
         {/* Body */}
-        <div className='flex w-full justify-start items-start'>
+        <div className='flex w-full justify-center items-start'>
           {reasons.map((reason,index) => (
-            
             <IconText
               type={reason.type}
               icon={reason.icon}  
@@ -43,7 +42,6 @@ const LandingBanner = () => {
         </div>
       </div>
 
-
     </div>
   )
 }
@@ -54,25 +52,19 @@ let reasons = [
   {
     type:"image",
     icon:CryptoGlobal,
-    title:"Receive Global payment",
-    description:"Cryptocurrency is borderless technology so you can receive crypto payment from any customers around the world through the internet for your online busienss."
+    title:"Accept Global Payment",
+    description:"Cryptocurrency is borderless technology so you can accept payment from any customers around the world through the internet for your online business growth."
   },
   {
     type:"image",
     icon:Chart,
     title:"Reduce Financial Tasks",
-    description:"We serve you financial tasks such as Acounting,Invoices and Data Analytics relate to your crypto transactions. We need to help you focus on your other business activities and reduces your crypto finance tasks."
+    description:"We serve you financial tasks such as Accounting,Invoices and Data Analytics relate to your cryptocurrency transaction powered by our platform. We need to help you focus on your main business and reduce your cryptocurrency-related tasks."
   },
   {
     type:"image",
     icon:HandsLove,
     title:"Easy to use",
-    description:"We build easy to use products for you to intergate to your online business on a few steps instead work for a month to complete crypto development tasks."
+    description:"We build easy to use products for you to intergate to your online business in a few steps instead work for a months to complete cryptocurrency development tasks realted to smart contract."
   },
-  {
-    type:"image",
-    icon:DigitalInfrastructure,
-    title:"Backcone of your crypto finance",
-    description:"We need to be financial infastructure of your online business related to crypto financial tasks."
-  }
 ]

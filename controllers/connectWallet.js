@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { logIn } from "../redux/actions/supplierAction";
 
 const connectWallet = async () => {
-    let requestMessage = "Please sign to get sign in to our Curlent digital banking platform"
+    let requestMessage = "Please sign to get sign in to our Curlent platform"
 
     if (typeof window !== "undefined") {
         try {
