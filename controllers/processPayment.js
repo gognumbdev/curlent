@@ -7,9 +7,17 @@ const requestPaymentOnMetaMask = async (amount,crypto,cryptoWallet,email,merchan
             const {ethereum} =window;
 
             await ethereum.enable()
-
-            let ethAmount = amount/coinValue[crypto];
-
+            
+            let ethAmount;
+            if(crypto !== "MATIC"){
+                console.log(`${crypto} : `,ethAmount)
+                ethAmount = amount/coinValue[crypto];
+            }else if (crypto === "MATIC"){
+                console.log(`${crypto} : `,ethAmount)
+                ethAmount = 0.5;
+            }
+            
+            
             let requestMessage = `Payment info : You will pay $ ${amount} as ${ethAmount.toFixed(4)} ${crypto} on ${cryptoWallet}. \nPlease sign this request from Curlent to make your payment successful. \nAfter this payment successfully process we will send you email about transaction info to ${email}`;
             
             try {
@@ -34,12 +42,17 @@ const requestPaymentOnMetaMask = async (amount,crypto,cryptoWallet,email,merchan
                     
                     //* Successfuly receive permission from consumer to make payment
                     if(permission){
+                        console.log("Ether : ",ethAmount)
                         const tx = await signer.sendTransaction({
                             to:merchantAddress,
                             value:ethers.utils.parseEther(ethAmount.toString())
                         })
+                        return tx ;
                     }
                 }
+
+                return "Nothing" ;
+
 
             } catch (error) {
                 alert(error.message)
@@ -56,6 +69,7 @@ let coinValue = {
     ETH:3090.97,
     BNB:402.97,
     LUNA:92.27,
+    MATIC:1.31,
     USDC:1,
     USDT:1,
     BUSD:1,

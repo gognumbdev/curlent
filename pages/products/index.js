@@ -7,8 +7,7 @@ const Products = () => {
       <Head>
         <title>Products</title>
       </Head>
-      <p className='text-4xl'>Stablecoins Payment</p>
-      <p className='text-4xl'>Invoices</p>
+      <p className='text-4xl'>Crypto Payment (automatic swap options) </p>
     </div>
   )
 }

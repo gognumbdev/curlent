@@ -6,6 +6,7 @@ import BNBSmartChain  from "../../public/icon/blockchain/bnbBeaconChain.png"
 import Ethereum from "../../public/icon/blockchain/ethereum.png"
 import Arbitum from "../../public/icon/blockchain/arbitum.svg"
 import Terra from "../../public/icon/blockchain/terra.png"
+import Polygon from "../../public/icon/blockchain/polygon.png"
 import Image from "next/image"
 import { switchEthereumChain } from '../../controllers/ethereum/switchNetwork'
 import {mainNetworks,testNetworks} from "../../controllers/ethereum/networksInfo"
@@ -14,23 +15,22 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }  
 
-const blockchains = [
-  { name: 'Ethereum' , image:Ethereum,chain:"ethereum"},
-  { name: 'BNB Smart Chain', image:BNBSmartChain,chain:"bsc"},
-  { name: 'Optimism' , image:Optimism,chain:"optimism"},
-  { name: 'Terra' , image:Terra,chain:"terra"},
-]
 
 const testnetBlockchains = [
   { name: 'Ropsten Test Network',code:"Ropsten" , image:Ethereum,chain:"ropsten"},
+  { name: 'Terra Test Network',code:"Terra" , image:Terra,chain:"terraTestnet"},
   { name: 'BSC Test Network',code:"BSC" , image:BNBSmartChain,chain:"bscTestnet"},
   { name: 'Optimism Kovan',code:"Optimism" , image:Optimism,chain:"optimismKovan"},
-  { name: 'Arbitum Rinkeby',code:"Arbitum" , image:Arbitum,chain:"arbitumRinkeby"},
-  { name: 'Terra Test Network',code:"Terra" , image:Terra,chain:"terraTestnet"},
+  { name: 'Polygon Mumbai',code:"Polygon" , image:Polygon,chain:"polygonMumbai"},
+  // { name: 'Arbitum Rinkeby',code:"Arbitum" , image:Arbitum,chain:"arbitumRinkeby"},
 ]
 
-export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl}) {
+export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl,connectTerraWallet}) {
   const [selected, setSelected] = useState(testnetBlockchains[0])
+
+  useEffect(() => {
+    handleSelectBlockchain(testnetBlockchains[0]);
+  }, [])
 
   useEffect(() => {
     setBlockchain(selected.name);
@@ -43,9 +43,8 @@ export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl}) {
       // setJsonRpcUrl(testNetworks[blockchain.chain]["rpcUrls"][0]);
       await switchEthereumChain(blockchain.chain,"test");
     }else{
-      alert("Switch to terra blockchain !");
+      connectTerraWallet();
     }
-    
   }
 
   return (

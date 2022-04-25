@@ -30,7 +30,7 @@ function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...ap
   if ([`/auth/signin`,`/auth/signup`].includes(appProps.router.pathname))
   return <Component {...pageProps} />;
 
-  return (
+  const main =(
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Layout>
@@ -40,7 +40,18 @@ function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...ap
     </Provider>
   )
 
-   
+  return typeof window !== 'undefined' ? (
+    <WalletProvider
+      defaultNetwork={defaultNetwork}
+      walletConnectChainIds={walletConnectChainIds}
+    >
+      {main}
+    </WalletProvider>
+  ) : (
+    <StaticWalletProvider defaultNetwork={defaultNetwork}>
+      {main}
+    </StaticWalletProvider>
+  );
 
   // return (
   //   <Provider store={store}>
@@ -51,8 +62,14 @@ function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...ap
   //     </PersistGate>
   //   </Provider>
   // )
-
-  
 }
+
+MyApp.getInitialProps = async () => {
+  const chainOptions = await getChainOptions();
+  return {
+    ...chainOptions,
+  };
+};
+
 
 export default MyApp

@@ -43,6 +43,17 @@ let testNetworks = {
         rpcUrls:["https://data-seed-prebsc-1-s1.binance.org:8545/"],
         blockExplorerUrls:["https://testnet.bscscan.com/"]
     },
+    polygonMumbai:{
+      chainId:`0x${Number(80001).toString(16)}`,
+      chainName:"Polygon Mumbai",
+      nativeCurrency:{
+        name:"MATIC",
+        symbol:"MATIC",
+        decimals:18
+      },
+      rpcUrls:["https://rpc-mumbai.matic.today",],
+      blockExplorerUrls:["https://mumbai.polygonscan.com/"]
+    },
 
 }
 

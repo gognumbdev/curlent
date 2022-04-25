@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SelectCrypto from "./SelectCrypto"
 import SelectCryptoWallet from "./SelectCryptoWallet"
 import SelectBlockchain from "./SelectBlockchain"
@@ -8,10 +8,14 @@ import {handleSwitchNetwork,networkChanged,switchEthereumChain} from "../../cont
 import CryptoPayment from "../../artifacts/contracts/payment/simplePayment.sol/CryptoPayment.json"
 import { ethers } from 'ethers'
 const config = require("../../next.config");
-import { LCDClient } from '@terra-money/terra.js';
-
+import {testnetFaucet} from "../../database/testnetInfo"
+import { useRouter } from 'next/router'
+import {CreateTxFailed,Timeout,TxFailed,TxResult,TxUnspecifiedError,useConnectedWallet,UserDenied,useWallet} from '@terra-money/wallet-provider';
+import { MnemonicKey, LCDClient,MsgSend,isTxError, Coins,Fee } from '@terra-money/terra.js';
+import TransactionSuccess from './TransactionSuccess'
 
 const ConfirmPayment = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("")
   const [amount, setAmount] = useState(206.01)
   const [blockchain, setBlockchain] = useState("Ropsten Test Network")
@@ -20,6 +24,11 @@ const ConfirmPayment = () => {
   const [merchantAddress, setMerchantAddress] = useState("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
   const [jsonRpcUrl, setJsonRpcUrl] = useState("https://ropsten.infura.io/v3/");
   
+  // Terra chain
+  const connectedTerraWallet = useConnectedWallet();
+  const [txResult, setTxResult] = useState(null);
+  const [txError, setTxError] = useState(null);
+
   // const [networkName, setNetworkName] = useState("Polygon Mainnet")
   // const provider = new ethers.providers.JsonRpcProvider(jsonRpcUrl);
   // const paymentContract = new ethers.Contract(config.smartContracts.simpleCryptoPayment, CryptoPayment.abi, provider)
@@ -36,50 +45,93 @@ const ConfirmPayment = () => {
 
   console.log(blockchain,crypto,cryptoWallet,jsonRpcUrl);
   
-  const handleConfirmPayment = () => {
+  const proceedTerraPayment = useCallback(() => {
+    let merchant1Address = "terra1p64fg74769ghzeqfnruvcu9lnd0ep49c8n4gpa"
 
+    console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
+      
+      if(!connectedTerraWallet) return alert("PLease Connect your Terra wallet such as Terra Station")
+
+      if (connectedTerraWallet.network.chainID.startsWith('columbus')) {
+        alert(`Please only execute this example on Testnet`);
+        return;
+      }
+
+      setTxResult(null);
+      setTxError(null);
+
+      connectedTerraWallet
+      .post({
+        fee: new Fee(1000000, '200000uusd'),
+        msgs: [
+          new MsgSend(connectedTerraWallet.walletAddress, merchant1Address, {
+            uusd: 1000000,
+          }),
+        ],
+      })
+      .then((TxResult) => {
+        console.log(TxResult);
+        setTxResult(TxResult);
+      })
+      .catch((error) => {
+          if (error instanceof UserDenied) {
+            setTxError('User Denied');
+          } else if (error instanceof CreateTxFailed) {
+            setTxError('Create Tx Failed: ' + error.message);
+          } else if (error instanceof TxFailed) {
+            setTxError('Tx Failed: ' + error.message);
+          } else if (error instanceof Timeout) {
+            setTxError('Timeout');
+          } else if (error instanceof TxUnspecifiedError) {
+            setTxError('Unspecified Error: ' + error.message);
+          } else {
+            setTxError(
+              'Unknown Error: ' +
+                (error instanceof Error ? error.message : String(error)),
+            );
+          }
+        });
+  })
+
+  const handleConfirmPayment = async () => {
     if(blockchain === "Terra Test Network") {
-      console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
+      proceedTerraPayment()
+
+      console.log(txResult);
+
     }else{
       
       console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
 
       if(cryptoWallet === "MetaMask"){
-        requestPaymentOnMetaMask(amount,crypto,cryptoWallet,email,merchantAddress);
+        let tx = await requestPaymentOnMetaMask(amount,crypto,cryptoWallet,email,merchantAddress);
+        console.log("tx info",tx)
+        setTxResult(tx);
       }else if(cryptoWallet==="Coinbase Wallet"){
         alert("This features is unavialable now,Please select new crypto wallet.")
       }
-      
     }
   }
 
-  // const handleAddToken = async (tokenCode) => {
-  //   // Swtich Network first
-  //   switch(tokenCode) {
-  //     case "USDC":
-  //       await switchEthereumChain(networks.ethereum.chainId).then(() => addToken(tokenCode));
-  //       break;
-  //     case "USDT":
-  //       await switchEthereumChain(networks.ethereum.chainId);
-  //       await addToken(tokenCode);
-  //       break;
-  //     case "BUSD":
-  //       await switchEthereumChain(networks.bsc.chainId);
-  //       await addToken(tokenCode);
-  //       break;
-  //     default:
-  //       await switchEthereumChain(networks.ethereum.chainId);
-  //       break;
-  //   };
-  // }
+  // Terra wallet provider SDK
+  const {
+    connect,
+    disconnect,
+  } = useWallet();
+
+  const connectTerraWallet = () => {
+    // connect(type, identifier)
+    return connect("EXTENSION","station");
+  }
+  const disconnectTerraWallet = () => disconnect();
+
+  console.log(txResult)
 
   return (
     <div className='h-full '>
       
         <p className='text-3xl font-bold'>Confirm Payment</p>
 
-        
-        
         {/* Payment Filter */}
         <div className='shadow-lg my-8 grid grid-cols-1 px-16 pb-10 rounded'>
 
@@ -98,22 +150,84 @@ const ConfirmPayment = () => {
             </div>
             
             {/* Select Stablecoin */}
-            <SelectBlockchain setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} />
+            <SelectBlockchain setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} connectTerraWallet={connectTerraWallet} />
 
             {/* Select Stablecoin */}
             <SelectCrypto setCrypto={setCrypto} blockchain={blockchain} />
-
+            <a target="_blank" href={testnetFaucet[blockchain]} rel="noopener noreferrer">
+              <p className='text-blue-500 cursor-pointer hover:text-black'>
+                Don't have {crypto} on {blockchain} ? Click this link ! 
+              </p>
+            </a>
+            
             {/* Select Wallet */}
             <SelectCryptoWallet setCryptoWallet={setCryptoWallet} blockchain={blockchain} />
+            {/* <SelectCryptoWallet setCryptoWallet={setCryptoWallet} blockchain={blockchain} /> */}
 
+            {/* Payment ! */}
             <button 
               onClick={handleConfirmPayment}
               className='shadow bg-amber-300 py-4 text-xl font-bold my-10 w-8/12 place-self-center rounded '>
               Pay $ {amount}
             </button>
-            
-           
 
+
+            {/* Ropsten Test Network Payment result */}
+            {((blockchain === "Ropsten Test Network") && txResult) && (
+              <TransactionSuccess 
+                txResult={txResult} blockchain={blockchain} 
+                href={`https://ropsten.etherscan.io/tx/${txResult?.hash}`} 
+                bg={"bg-gray-500"}
+                text={"text-white"}
+                blockExplorer={"Ropsten Etherscan"}
+              />
+            )}
+
+            {/* BSC Test Network Payment result */}
+            {((blockchain === "BSC Test Network") && txResult) && (
+              <TransactionSuccess 
+                txResult={txResult} blockchain={blockchain} 
+                href={`https://testnet.bscscan.com/tx/${txResult?.hash}`} 
+                bg={"bg-amber-300"}
+                text={"text-black"}
+                blockExplorer={"Testnet BSCScan"}
+              />
+            )}
+
+            {/* Optimism Kovan Payment result */}
+            {((blockchain === "Optimism Kovan") && txResult) && (
+              <TransactionSuccess 
+                txResult={txResult} blockchain={blockchain} 
+                href={`https://kovan-optimistic.etherscan.io/tx/${txResult?.hash}`} 
+                bg={"bg-red-500"}
+                text={"text-white"}
+                blockExplorer={"Optimistic Kovan Etherscan"}
+              />
+            )}
+
+            {/* Terra Payment result */}
+            {((blockchain === "Terra Test Network") && txResult) && (
+              <TransactionSuccess 
+                txResult={txResult} blockchain={blockchain} 
+                href={`https://finder.terra.money/${connectedTerraWallet.network.chainID}/tx/${txResult?.result?.txhash}`} 
+                bg={"bg-blue-500"}
+                text={"text-white"}
+                blockExplorer={"Terra Finder"}
+              />
+            )}
+
+            {/* Polygon Mumbai Payment Result */}
+            {((blockchain === "Polygon Mumbai") && txResult) && (
+              <TransactionSuccess 
+                txResult={txResult} blockchain={blockchain} 
+                href={`https://mumbai.polygonscan.com/tx/${txResult?.hash}`} 
+                bg={"bg-violet-500"}
+                text={"text-white"}
+                blockExplorer={"Terra Finder"}
+              />
+            )}
+
+         
         </div>
 
     </div>
@@ -123,3 +237,81 @@ const ConfirmPayment = () => {
 export default ConfirmPayment
 
 
+       
+          //   {/* Ropsten Test Network Payment result */}
+          //   {((blockchain === "Ropsten Test Network") && txResult) && (
+          //     <div className='grid grid-cols-1'>
+          //       <p className=' text-green-500 my-2'>Your Transaction on Ropsten Test Network success !</p>
+          //       <p className='mb-2'>to check your transaction info</p>
+          //       {txResult && (
+          //         <div>
+          //         <a
+          //           href={`https://ropsten.etherscan.io/tx/${txResult?.hash}`}
+          //           target="_blank"
+          //           rel="noreferrer"
+          //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
+          //         >
+          //           Open Tx Result in Ropsten Etherscan 
+          //         </a>
+          //         </div>
+          //       )}
+          //   </div>
+          // )}
+
+          // {/* BSC Test Network Payment result */}
+          // {((blockchain === "BSC Test Network") && txResult) && (
+          //     <div className='grid grid-cols-1'>
+          //       <p className=' text-green-500 my-2'>Your Transaction on BSC Test Network success !</p>
+          //       <p className='mb-2'>to check your transaction info</p>
+          //       {txResult && (
+          //         <div>
+          //         <a
+          //           href={`https://testnet.bscscan.com/tx/${txResult?.hash}`}
+          //           target="_blank"
+          //           rel="noreferrer"
+          //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
+          //         >
+          //           Open Tx Result in BSC Scan
+          //         </a>
+          //         </div>
+          //       )}
+          //   </div>
+          // )}
+          // {Optimistic Kovan}
+        //   {((blockchain === "Optimism Kovan") && txResult) && (
+        //     <div className='grid grid-cols-1'>
+        //       <p className=' text-green-500 my-2'>Your Transaction on Optimism Kovan success !</p>
+        //       <p className='mb-2'>to check your transaction info</p>
+        //       {txResult && (
+        //         <div>
+        //         <a
+        //           href={`https://kovan-optimistic.etherscan.io/tx/${txResult?.hash}`}
+        //           target="_blank"
+        //           rel="noreferrer"
+        //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
+        //         >
+        //           Open Tx Result in Optimistic Kovan Etherscan
+        //         </a>
+        //         </div>
+        //       )}
+        //   </div>
+        // )}
+          // {/* Terra Payment result */}
+          // {txResult && (blockchain === "Terra Test Network") && (
+          //   <div className='grid grid-cols-1'>
+          //     <p className=' text-green-500 my-2'>Your Transaction on Terra chain success !</p>
+          //     <p className='mb-2'>to check your transaction info</p>
+          //     {connectedTerraWallet && txResult && (
+          //       <div>
+          //       <a
+          //         href={`https://finder.terra.money/${connectedTerraWallet.network.chainID}/tx/${txResult?.result?.txhash}`}
+          //         target="_blank"
+          //         rel="noreferrer"
+          //         className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
+          //       >
+          //         Open Tx Result in Terra Finder
+          //       </a>
+          //       </div>
+          //     )}
+          //   </div>
+          // )}

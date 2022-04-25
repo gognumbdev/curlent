@@ -12,9 +12,8 @@ contract CryptoPayment {
     event TransferSent(address _from,address _destAddr,uint _amount);
 
     function transferCrypto(address payable _to) public payable {
-        _to.transfer(msg.value*98/100);
-        curlentAddress.transfer(msg.value*2/100);
-        
+        _to.transfer(msg.value*985/1000);
+        curlentAddress.transfer(msg.value*15/1000);
         emit TransferReceived(msg.sender,msg.value);
         emit TransferSent(msg.sender,_to,msg.value);
     }

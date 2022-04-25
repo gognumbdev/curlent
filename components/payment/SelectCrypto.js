@@ -8,26 +8,12 @@ import BUSD from "../../public/icon/crypto/BUSD.png"
 import BNB from "../../public/icon/crypto/BNB.png"
 import LUNA from "../../public/icon/crypto/LUNA.png"
 import UST from "../../public/icon/crypto/UST.png"
+import MATIC from "../../public/icon/crypto/MATIC.png"
 import Image from "next/image"
-import { ethers } from 'ethers'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }  
-
-let blockchainStablecoins = {
-  "Ethereum":[
-    { name: 'USD Coin',code:"USDC" , image:USDC},
-    { name: 'USD Tether',code:"USDT" , image:USDT},
-  ],
-  "BNB Smart Chain":[
-    { name: 'Binance USD',code:"BUSD" , image:BUSD}  
-  ],
-  "Optimism":[
-    { name: 'USD Coin',code:"USDC" , image:USDC},
-    { name: 'USD Tether',code:"USDT" , image:USDT},
-  ]
-}
 
 let blockchainCoins = {
   "Ropsten Test Network":[
@@ -52,18 +38,28 @@ let blockchainCoins = {
   "Terra Test Network":[
     { name: 'Terra',code:"LUNA" , image:LUNA},
     { name: 'Terra USD',code:"UST" , image:UST},
+  ],
+  "Polygon Mumbai":[
+    { name: 'Polygon',code:"MATIC" , image:MATIC},
+    { name: 'USD Coin',code:"USDC" , image:USDC},
   ]
 }
 
-export default function SelectStablecoin({setCrypto,blockchain}) {
+export default function SelectCrypto({setCrypto,blockchain}) {
   const [selected, setSelected] = useState(blockchainCoins[blockchain][0])
-  const [stablecoins, setStablecoins] = useState([]);
+  const [cryptos, setCryptos] = useState([]);
 
   
   useEffect(() => {
     setCrypto(selected.code);
-    setStablecoins(blockchainCoins[blockchain]);
-  }, [selected,blockchain])
+  }, [selected])
+
+  useEffect(() => {
+    if(blockchain === "Terra Test Network"){
+      setSelected(blockchainCoins[blockchain][0]);
+    }
+    setCryptos(blockchainCoins[blockchain]);
+  }, [blockchain])
 
   if(typeof window !== "undefined"){   
     window.ethereum.on("chainChanged", () => setSelected(blockchainCoins[blockchain][0]));
@@ -75,7 +71,7 @@ export default function SelectStablecoin({setCrypto,blockchain}) {
       <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <div className='w-full'>
-          <Listbox.Label className="block text-lg font-medium text-gray-700">Select Stablecoin</Listbox.Label>
+          <Listbox.Label className="block text-lg font-medium text-gray-700">Select Cryptocurrency</Listbox.Label>
           <div className="mt-1 relative">
             <Listbox.Button className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm cursor-pointer">
               <div className="flex items-center">
@@ -99,7 +95,7 @@ export default function SelectStablecoin({setCrypto,blockchain}) {
                 leaveTo="opacity-0"
                 >
                     <Listbox.Options static className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                    {stablecoins?.map((stablecoin,index) => (
+                    {cryptos?.map((stablecoin,index) => (
                         <Listbox.Option
                         key={index}
                         className={({ active }) =>

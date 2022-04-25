@@ -1,48 +1,45 @@
-import { MnemonicKey, LCDClient } from '@terra-money/terra.js';
-import { MsgSend } from '@terra-money/terra.js';
-import { isTxError } from "@terra-money/terra.js";
+import { MnemonicKey, LCDClient,MsgSend,isTxError, Coins,Fee } from '@terra-money/terra.js';
 
-const terra = new LCDClient({
-    URL: 'https://lcd.terra.dev',
-    chainID: 'columbus-5'
-})
 
-const processPaymentOnTerra = ({amount}) => {
+const processPaymentOnTerra = async ({amount}) => {
     
     // 1.Create a wallet
     // You will first want to create a wallet which you can use to sign transactions.
-    const mk = new MnemonicKey();
-    
-    const terra = new LCDClient({
-        URL: 'https://soju-lcd.terra.dev',
-        chainId: 'soju-0014'
+    const mk = new MnemonicKey({
+        // mnemonic:config.env.terra.gognumbdev.mnemonic
+        mnemonic:"discover cute culture talent deposit burst knock reason field dove priority syrup service turtle then top loyal shell aerobic media tone lunar armed toward"
     });
     
-    // 2.Create messages
+    const terra = new LCDClient({
+        URL: 'https://bombay-lcd.terra.dev',
+        chainID: 'bombay-12',
+      });
+
+    // a wallet can be created out of any key
+    // wallets abstract transaction building
     const wallet = terra.wallet(mk);
+    
+
+    //2.Create messages
     const send = new MsgSend(
         wallet.key.accAddress,
         "terra1p64fg74769ghzeqfnruvcu9lnd0ep49c8n4gpa",
-        { uluna: amount/92.58 }
+        {uluna: 1000000, ukrw: 1230201, uusd: 1312029  }
     );
 
     // 3.Create and Sign Transaction
-    const tx = await wallet.createAndSignTx({
+    await wallet.createAndSignTx({
         msgs: [send],
         memo: "Hello Terra Payment !"
-    });
-
-    // 4.Broadcast transaction
-    const txResult = await terra.tx.broadcast(tx);
-    
-    // 5.Check events
-    if (isTxError(txResult)) {
-        throw new Error(`encountered an error while running the transaction: ${txResult.code} ${txResult.codespace}`);
-    }
-
-    // check for events from the first message
-    txResult.logs[0].eventsByType.store_code;
+    })
+    .then(tx => terra.tx.broadcast(tx))
+    .then(result => console.log(`TX hash : ${result.txhash}`));
 }
 
 export {processPaymentOnTerra};
 
+let merchantInfo = {
+    merchant1:{
+        terraAddress:"terra1p64fg74769ghzeqfnruvcu9lnd0ep49c8n4gpa"
+    }
+}

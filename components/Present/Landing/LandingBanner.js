@@ -20,7 +20,7 @@ const LandingBanner = () => {
 
         {/* Banner Subtitle */}
         <p className='text-xl w-10/12'>
-          Start accept cryptocurrency to reach global customers for your online business to boost your business growth with cheaper fees,faster settlements than traditional fiat currency cross-border payment.
+          Start accept cryptocurrency to reach global customers for your online business and boost your business growth with none border limitation,cheaper fees,faster settlements than traditional fiat currency cross-border payment.
         </p>
         
         {/* Banner Buttons */}

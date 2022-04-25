@@ -4,9 +4,9 @@ import OrderInfo from '../../../components/payment/OrderInfo'
 import ConfirmPayment from '../../../components/payment/ConfirmPayment'
 import TrazorModelT from "../../../public/image/product/TrazorModelT.png"
 import TrazorLogo from "../../../public/image/product/TrazorLogo.png"
-import ConnectTerraWallet from '../../../components/utils/terra/ConnectTerraWallet'
 
 const Preview = () => {
+ 
   return (
     <div className='bg-gray-50 grid grid-cols-1 py-14 h-screen place-items-center content-start w-full'>
         <Head>
@@ -24,12 +24,11 @@ const Preview = () => {
             {/* Confirm Payment */}
             <ConfirmPayment />
 
-        </div>
+            
 
-        {/* Test Terra */}
-        {/* <div className='grid grid-cols-2 border-2 bg-white p-12 w-8/12'>
-            <ConnectTerraWallet />
-        </div> */}
+        </div>
+    
+        
     </div>
   )
 }
@@ -56,5 +55,4 @@ let trazorModelT = {
     price:206.01,
     productName:"Trazor Model T",
     productDescription:"The Trezor Model T is an advanced cryptocurrency hardware wallet. Store Bitcoin, passwords, tokens and other keys with confidence."
-
 }

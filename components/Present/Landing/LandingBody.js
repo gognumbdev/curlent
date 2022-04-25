@@ -4,6 +4,7 @@ import IconText from './IconText'
 import CurlentBigLogo from "../../../public/logo/CurlentBig.png"
 import CryptoGlobal  from "../../../public/icon/present/cryptoGlobal.png"
 import HandsLove  from "../../../public/icon/present/handsLove.png"
+import HandShake  from "../../../public/icon/present/handshake.png"
 import Chart  from "../../../public/icon/present/chart.png"
 import DigitalInfrastructure  from "../../../public/icon/present/digitalInfrastructure.png"
 
@@ -66,5 +67,11 @@ let reasons = [
     icon:HandsLove,
     title:"Easy to use",
     description:"We build easy to use products for you to intergate to your online business in a few steps instead work for a months to complete cryptocurrency development tasks realted to smart contract."
+  },
+  {
+    type:"image",
+    icon:HandShake,
+    title:"Meet each needs",
+    description:"We allow customer to pay with the crypto they want to pay and merchant can select the crypto they want to receive although it's another crypto that customer pay. So both customer and merchant have a choice for their payment mediums."
   },
 ]

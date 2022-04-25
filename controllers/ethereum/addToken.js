@@ -1,3 +1,4 @@
+
 const addToken = async (tokenCode) => {
     if(typeof window !== "undefined"){
         const {ethereum} = window;
@@ -20,6 +21,27 @@ const addToken = async (tokenCode) => {
         }
     }
 }
+
+const handleAddToken = async (tokenCode,networks) => {
+    // Swtich Network first
+    switch(tokenCode) {
+      case "USDC":
+        await switchEthereumChain(networks.ethereum.chainId).then(() => addToken(tokenCode));
+        break;
+      case "USDT":
+        await switchEthereumChain(networks.ethereum.chainId);
+        await addToken(tokenCode);
+        break;
+      case "BUSD":
+        await switchEthereumChain(networks.bsc.chainId);
+        await addToken(tokenCode);
+        break;
+      default:
+        await switchEthereumChain(networks.ethereum.chainId);
+        break;
+    };
+}
+
 
 let tokensInfo = {
     USDC:{
