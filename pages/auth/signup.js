@@ -47,9 +47,9 @@ const Signup = () => {
           <InputField title="Password" value={password} setValue={setPassword} />
           <InputField title="Full Name" value={fullName} setValue={setFullName} />
 
-          <div class="flex mt-6 items-center">
+          <div className="flex mt-6 items-center">
             <input type="checkbox" value={checkboxValue} onClick={() => setCheckboxValue(!checkboxValue)} />
-            <span class="ml-2">I agree to the 
+            <span className="ml-2">I agree to the 
                 <span className="ml-2 text-blue-600 text-lg hover:text-black cursor-pointer transition transform duration-150 ease-out">
                     privacy policy
                 </span>

@@ -6,7 +6,7 @@ import CurlentFullLogo from "../../public/logo/CurlentFull.png"
 import InputField from '../../components/utils/InputField'
 import { useRouter } from 'next/router'
 
-const signin = () => {
+const Signin = () => {
   const router =useRouter();
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
@@ -43,7 +43,7 @@ const signin = () => {
           
 
           <p className='text-lg'>
-            <span>Don't have an account ?</span>
+            <span>Don&apos;t have an account ?</span>
             <span 
               className='text-blue-600 ml-2 hover:text-black cursor-pointer transition transform duration-150 ease-out' 
               onClick={() => router.push("/auth/signup")}
@@ -57,4 +57,4 @@ const signin = () => {
   )
 }
 
-export default signin
+export default Signin

@@ -36,6 +36,7 @@ const LandingBanner = () => {
               icon={reason.icon}  
               title={reason.title}
               description={reason.description}
+              index={index}
             />
             
           ))}

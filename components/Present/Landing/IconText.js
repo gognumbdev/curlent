@@ -1,9 +1,9 @@
 import React from 'react'
 import Image from "next/image"
 
-const IconText = ({type,icon,title,description}) => {
+const IconText = ({type,icon,title,description,index}) => {
   return (
-    <div className='p-6 w-4/12 space-y-4 border-2 rounded mx-1 h-full'>
+    <div key={index} className='p-6 w-4/12 space-y-4 border-2 rounded mx-1 h-full'>
         {(type === "icon") ? (
             {icon}
         ) : (

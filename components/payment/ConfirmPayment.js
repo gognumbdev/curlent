@@ -145,7 +145,7 @@ const ConfirmPayment = () => {
                   name={"Email"} 
                   value={email}
                   className="border-2 w-8/12 rounded px-4 py-3 focus:outline-blue-600 transition transform duration-150 ease-out"
-                  onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 />
             </div>
             
@@ -156,7 +156,7 @@ const ConfirmPayment = () => {
             <SelectCrypto setCrypto={setCrypto} blockchain={blockchain} />
             <a target="_blank" href={testnetFaucet[blockchain]} rel="noopener noreferrer">
               <p className='text-blue-500 cursor-pointer hover:text-black'>
-                Don't have {crypto} on {blockchain} ? Click this link ! 
+                Don&apos;t have {crypto} on {blockchain} ? Click this link ! 
               </p>
             </a>
             
@@ -235,83 +235,3 @@ const ConfirmPayment = () => {
 }
 
 export default ConfirmPayment
-
-
-       
-          //   {/* Ropsten Test Network Payment result */}
-          //   {((blockchain === "Ropsten Test Network") && txResult) && (
-          //     <div className='grid grid-cols-1'>
-          //       <p className=' text-green-500 my-2'>Your Transaction on Ropsten Test Network success !</p>
-          //       <p className='mb-2'>to check your transaction info</p>
-          //       {txResult && (
-          //         <div>
-          //         <a
-          //           href={`https://ropsten.etherscan.io/tx/${txResult?.hash}`}
-          //           target="_blank"
-          //           rel="noreferrer"
-          //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
-          //         >
-          //           Open Tx Result in Ropsten Etherscan 
-          //         </a>
-          //         </div>
-          //       )}
-          //   </div>
-          // )}
-
-          // {/* BSC Test Network Payment result */}
-          // {((blockchain === "BSC Test Network") && txResult) && (
-          //     <div className='grid grid-cols-1'>
-          //       <p className=' text-green-500 my-2'>Your Transaction on BSC Test Network success !</p>
-          //       <p className='mb-2'>to check your transaction info</p>
-          //       {txResult && (
-          //         <div>
-          //         <a
-          //           href={`https://testnet.bscscan.com/tx/${txResult?.hash}`}
-          //           target="_blank"
-          //           rel="noreferrer"
-          //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
-          //         >
-          //           Open Tx Result in BSC Scan
-          //         </a>
-          //         </div>
-          //       )}
-          //   </div>
-          // )}
-          // {Optimistic Kovan}
-        //   {((blockchain === "Optimism Kovan") && txResult) && (
-        //     <div className='grid grid-cols-1'>
-        //       <p className=' text-green-500 my-2'>Your Transaction on Optimism Kovan success !</p>
-        //       <p className='mb-2'>to check your transaction info</p>
-        //       {txResult && (
-        //         <div>
-        //         <a
-        //           href={`https://kovan-optimistic.etherscan.io/tx/${txResult?.hash}`}
-        //           target="_blank"
-        //           rel="noreferrer"
-        //           className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
-        //         >
-        //           Open Tx Result in Optimistic Kovan Etherscan
-        //         </a>
-        //         </div>
-        //       )}
-        //   </div>
-        // )}
-          // {/* Terra Payment result */}
-          // {txResult && (blockchain === "Terra Test Network") && (
-          //   <div className='grid grid-cols-1'>
-          //     <p className=' text-green-500 my-2'>Your Transaction on Terra chain success !</p>
-          //     <p className='mb-2'>to check your transaction info</p>
-          //     {connectedTerraWallet && txResult && (
-          //       <div>
-          //       <a
-          //         href={`https://finder.terra.money/${connectedTerraWallet.network.chainID}/tx/${txResult?.result?.txhash}`}
-          //         target="_blank"
-          //         rel="noreferrer"
-          //         className='p-2 my-2 border-2 rounded bg-amber-300 shadow border-none font-medium'
-          //       >
-          //         Open Tx Result in Terra Finder
-          //       </a>
-          //       </div>
-          //     )}
-          //   </div>
-          // )}
