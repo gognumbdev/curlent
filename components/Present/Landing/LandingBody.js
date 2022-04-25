@@ -32,11 +32,12 @@ const LandingBanner = () => {
         <div className='flex w-full justify-center items-start'>
           {reasons.map((reason,index) => (
             <IconText
+              key={index}
               type={reason.type}
               icon={reason.icon}  
               title={reason.title}
               description={reason.description}
-              index={index}
+              
             />
             
           ))}
