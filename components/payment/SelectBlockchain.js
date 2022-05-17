@@ -25,7 +25,7 @@ const testnetBlockchains = [
   // { name: 'Arbitum Rinkeby',code:"Arbitum" , image:Arbitum,chain:"arbitumRinkeby"},
 ]
 
-export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl,connectTerraWallet}) {
+export default function SelectBlockchain({setBlockchain,setJsonRpcUrl,connectTerraWallet,setTxResult}) {
   const [selected, setSelected] = useState(testnetBlockchains[0])
 
   useEffect(() => {
@@ -38,13 +38,14 @@ export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl,connectT
 
   const handleSelectBlockchain = async (blockchain) => {
     console.log(blockchain)
-    if((blockchain.name !== "Terra") && (blockchain.name !== "Terra Test Network")){
+    if((blockchain.code !== "Terra") && (blockchain.name !== "Terra Test Network")){
       setBlockchain(blockchain.name);
       // setJsonRpcUrl(testNetworks[blockchain.chain]["rpcUrls"][0]);
       await switchEthereumChain(blockchain.chain,"test");
     }else{
       connectTerraWallet();
     }
+    setTxResult(null);
   }
 
   return (
@@ -122,3 +123,4 @@ export default function SelectCryptoWallet({setBlockchain,setJsonRpcUrl,connectT
     </div>
   )
 }
+

@@ -1,0 +1,18 @@
+
+curl https://api.curlent.com/v1/transfers \ 
+    -d amount=100 \
+    -d currency="usd" \
+    -d destination="terra1f44ddca9awepv2rnudztguq5rmrran2m20zzd6" \
+{
+    "id":"clp-b6a74197-4847-442d-9c71-9834badb43a6",
+    "object":"transfers",
+    "amount":100,
+    "currency":"usd",
+    "destination":"terra1f44ddca9awepv2rnudztguq5rmrran2m20zzd6",
+    "destination_amount":"100",
+    "destination_currency":"ust"
+}
+
+
+
+

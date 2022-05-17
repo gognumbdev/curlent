@@ -3,10 +3,7 @@ import SelectCrypto from "./SelectCrypto"
 import SelectCryptoWallet from "./SelectCryptoWallet"
 import SelectBlockchain from "./SelectBlockchain"
 import { requestPaymentOnMetaMask } from '../../controllers/processPayment'
-import { addToken } from '../../controllers/ethereum/addToken'
 import {handleSwitchNetwork,networkChanged,switchEthereumChain} from "../../controllers/ethereum/switchNetwork"
-import CryptoPayment from "../../artifacts/contracts/payment/simplePayment.sol/CryptoPayment.json"
-import { ethers } from 'ethers'
 const config = require("../../next.config");
 import {testnetFaucet} from "../../database/testnetInfo"
 import { useRouter } from 'next/router'
@@ -149,11 +146,9 @@ const ConfirmPayment = () => {
                 />
             </div>
             
-            {/* Select Stablecoin */}
-            <SelectBlockchain setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} connectTerraWallet={connectTerraWallet} />
+            <SelectBlockchain setTxResult={setTxResult} setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} connectTerraWallet={connectTerraWallet} />
 
-            {/* Select Stablecoin */}
-            <SelectCrypto setCrypto={setCrypto} blockchain={blockchain} />
+            <SelectCrypto setCrypto={setCrypto} blockchain={blockchain} setTxResult={setTxResult}/>
             <a target="_blank" href={testnetFaucet[blockchain]} rel="noopener noreferrer">
               <p className='text-blue-500 cursor-pointer hover:text-black'>
                 Don&apos;t have {crypto} on {blockchain} ? Click this link ! 

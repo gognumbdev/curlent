@@ -45,13 +45,14 @@ let blockchainCoins = {
   ]
 }
 
-export default function SelectCrypto({setCrypto,blockchain}) {
+export default function SelectCrypto({setCrypto,blockchain,setTxResult}) {
   const [selected, setSelected] = useState(blockchainCoins[blockchain][0])
   const [cryptos, setCryptos] = useState([]);
 
   
   useEffect(() => {
     setCrypto(selected.code);
+    setTxResult(null);
   }, [selected])
 
   useEffect(() => {
