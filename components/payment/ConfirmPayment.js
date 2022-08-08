@@ -7,8 +7,6 @@ import {handleSwitchNetwork,networkChanged,switchEthereumChain} from "../../cont
 const config = require("../../next.config");
 import {testnetFaucet} from "../../database/testnetInfo"
 import { useRouter } from 'next/router'
-import {CreateTxFailed,Timeout,TxFailed,TxResult,TxUnspecifiedError,useConnectedWallet,UserDenied,useWallet} from '@terra-money/wallet-provider';
-import { MnemonicKey, LCDClient,MsgSend,isTxError, Coins,Fee } from '@terra-money/terra.js';
 import TransactionSuccess from './TransactionSuccess'
 
 const ConfirmPayment = () => {
@@ -36,54 +34,6 @@ const ConfirmPayment = () => {
 
   console.log(blockchain,crypto,cryptoWallet,jsonRpcUrl);
   
-  const proceedTerraPayment = useCallback(() => {
-    let merchant1Address = "terra1p64fg74769ghzeqfnruvcu9lnd0ep49c8n4gpa"
-
-    console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
-      
-      if(!connectedTerraWallet) return alert("PLease Connect your Terra wallet such as Terra Station")
-
-      if (connectedTerraWallet.network.chainID.startsWith('columbus')) {
-        alert(`Please only execute this example on Testnet`);
-        return;
-      }
-
-      setTxResult(null);
-      setTxError(null);
-
-      connectedTerraWallet
-      .post({
-        fee: new Fee(1000000, '200000uusd'),
-        msgs: [
-          new MsgSend(connectedTerraWallet.walletAddress, merchant1Address, {
-            uusd: 1000000,
-          }),
-        ],
-      })
-      .then((TxResult) => {
-        console.log(TxResult);
-        setTxResult(TxResult);
-      })
-      .catch((error) => {
-          if (error instanceof UserDenied) {
-            setTxError('User Denied');
-          } else if (error instanceof CreateTxFailed) {
-            setTxError('Create Tx Failed: ' + error.message);
-          } else if (error instanceof TxFailed) {
-            setTxError('Tx Failed: ' + error.message);
-          } else if (error instanceof Timeout) {
-            setTxError('Timeout');
-          } else if (error instanceof TxUnspecifiedError) {
-            setTxError('Unspecified Error: ' + error.message);
-          } else {
-            setTxError(
-              'Unknown Error: ' +
-                (error instanceof Error ? error.message : String(error)),
-            );
-          }
-        });
-  })
-
   const handleConfirmPayment = async () => {
       console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
 
