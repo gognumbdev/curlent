@@ -4,8 +4,6 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import Optimism from "../../public/icon/blockchain/optimism.png"
 import BNBSmartChain  from "../../public/icon/blockchain/bnbBeaconChain.png"
 import Ethereum from "../../public/icon/blockchain/ethereum.png"
-import Arbitum from "../../public/icon/blockchain/arbitum.svg"
-import Terra from "../../public/icon/blockchain/terra.png"
 import Polygon from "../../public/icon/blockchain/polygon.png"
 import Image from "next/image"
 import { switchEthereumChain } from '../../controllers/ethereum/switchNetwork'
@@ -18,11 +16,9 @@ function classNames(...classes) {
 
 const testnetBlockchains = [
   { name: 'Ropsten Test Network',code:"Ropsten" , image:Ethereum,chain:"ropsten"},
-  { name: 'Terra Test Network',code:"Terra" , image:Terra,chain:"terraTestnet"},
   { name: 'BSC Test Network',code:"BSC" , image:BNBSmartChain,chain:"bscTestnet"},
   { name: 'Optimism Kovan',code:"Optimism" , image:Optimism,chain:"optimismKovan"},
   { name: 'Polygon Mumbai',code:"Polygon" , image:Polygon,chain:"polygonMumbai"},
-  // { name: 'Arbitum Rinkeby',code:"Arbitum" , image:Arbitum,chain:"arbitumRinkeby"},
 ]
 
 export default function SelectBlockchain({setBlockchain,setJsonRpcUrl,connectTerraWallet,setTxResult}) {

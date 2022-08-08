@@ -15,8 +15,6 @@
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@openzeppelin/contracts": "^4.5.0",
-    "@terra-money/terra.js": "^3.0.11",
-    "@terra-money/wallet-provider": "^3.8.1",
     "autoprefixer": "^10.4.4",
     "chai": "^4.3.6",
     "ethers": "^5.6.2",

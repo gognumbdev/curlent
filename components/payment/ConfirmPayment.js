@@ -21,14 +21,8 @@ const ConfirmPayment = () => {
   const [merchantAddress, setMerchantAddress] = useState("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
   const [jsonRpcUrl, setJsonRpcUrl] = useState("https://ropsten.infura.io/v3/");
   
-  // Terra chain
-  const connectedTerraWallet = useConnectedWallet();
   const [txResult, setTxResult] = useState(null);
   const [txError, setTxError] = useState(null);
-
-  // const [networkName, setNetworkName] = useState("Polygon Mainnet")
-  // const provider = new ethers.providers.JsonRpcProvider(jsonRpcUrl);
-  // const paymentContract = new ethers.Contract(config.smartContracts.simpleCryptoPayment, CryptoPayment.abi, provider)
 
   useEffect(() => {
     if(typeof window !== "undefined"){
@@ -91,13 +85,6 @@ const ConfirmPayment = () => {
   })
 
   const handleConfirmPayment = async () => {
-    if(blockchain === "Terra Test Network") {
-      proceedTerraPayment()
-
-      console.log(txResult);
-
-    }else{
-      
       console.log(`Consumer confirm to pay $ ${amount} as ${crypto} on ${cryptoWallet} , send transaction info to ${email}`);
 
       if(cryptoWallet === "MetaMask"){
@@ -107,22 +94,8 @@ const ConfirmPayment = () => {
       }else if(cryptoWallet==="Coinbase Wallet"){
         alert("This features is unavialable now,Please select new crypto wallet.")
       }
-    }
+
   }
-
-  // Terra wallet provider SDK
-  const {
-    connect,
-    disconnect,
-  } = useWallet();
-
-  const connectTerraWallet = () => {
-    // connect(type, identifier)
-    return connect("EXTENSION","station");
-  }
-  const disconnectTerraWallet = () => disconnect();
-
-  console.log(txResult)
 
   return (
     <div className='h-full '>
@@ -146,7 +119,7 @@ const ConfirmPayment = () => {
                 />
             </div>
             
-            <SelectBlockchain setTxResult={setTxResult} setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} connectTerraWallet={connectTerraWallet} />
+            <SelectBlockchain setTxResult={setTxResult} setBlockchain={setBlockchain} setJsonRpcUrl={setJsonRpcUrl} />
 
             <SelectCrypto setCrypto={setCrypto} blockchain={blockchain} setTxResult={setTxResult}/>
             <a target="_blank" href={testnetFaucet[blockchain]} rel="noopener noreferrer">
@@ -197,17 +170,6 @@ const ConfirmPayment = () => {
                 bg={"bg-red-500"}
                 text={"text-white"}
                 blockExplorer={"Optimistic Kovan Etherscan"}
-              />
-            )}
-
-            {/* Terra Payment result */}
-            {((blockchain === "Terra Test Network") && txResult) && (
-              <TransactionSuccess 
-                txResult={txResult} blockchain={blockchain} 
-                href={`https://finder.terra.money/${connectedTerraWallet.network.chainID}/tx/${txResult?.result?.txhash}`} 
-                bg={"bg-blue-500"}
-                text={"text-white"}
-                blockExplorer={"Terra Finder"}
               />
             )}
 
