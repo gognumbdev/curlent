@@ -11,12 +11,6 @@ const progress = new ProgressBar({
   className:'z-50',
   delay:100,
 });
-import {
-  getChainOptions,
-  StaticWalletProvider,
-  WalletControllerChainOptions,
-  WalletProvider,
-} from '@terra-money/wallet-provider';
 
 const {store,persistor} = getStore();
 
@@ -30,7 +24,7 @@ function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...ap
   if ([`/auth/signin`,`/auth/signup`].includes(appProps.router.pathname))
   return <Component {...pageProps} />;
 
-  const main =(
+  return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Layout>
@@ -39,37 +33,8 @@ function MyApp({ Component, defaultNetwork,walletConnectChainIds,pageProps,...ap
       </PersistGate>
     </Provider>
   )
-
-  return typeof window !== 'undefined' ? (
-    <WalletProvider
-      defaultNetwork={defaultNetwork}
-      walletConnectChainIds={walletConnectChainIds}
-    >
-      {main}
-    </WalletProvider>
-  ) : (
-    <StaticWalletProvider defaultNetwork={defaultNetwork}>
-      {main}
-    </StaticWalletProvider>
-  );
-
-  // return (
-  //   <Provider store={store}>
-  //     <PersistGate persistor={persistor}>
-  //       <Layout>
-  //         <Component {...pageProps} />
-  //       </Layout>
-  //     </PersistGate>
-  //   </Provider>
-  // )
 }
 
-MyApp.getInitialProps = async () => {
-  const chainOptions = await getChainOptions();
-  return {
-    ...chainOptions,
-  };
-};
 
 
 export default MyApp

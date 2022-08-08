@@ -3,7 +3,6 @@ import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import MetaMask from "../../public/icon/wallet/MetaMask.png"
 import CoinbaseWallet from "../../public/icon/wallet/CoinbaseWallet.png"
-import WalletConnect from "../../public/icon/wallet/WalletConnect.png"
 import Image from "next/image"
 
 function classNames(...classes) {
@@ -11,10 +10,8 @@ function classNames(...classes) {
 }  
 
 const cryptoWallets = [
-  
   { name: 'MetaMask',code:"MetaMask" , image:MetaMask},
   { name: 'Coinbase Wallet',code:"Coinbase Wallet" , image:CoinbaseWallet},
-//   { name: 'WalletConnect',code:"WalletConnect" , image:WalletConnect},
 ]
 
 export default function SelectCryptoWallet({setCryptoWallet}) {

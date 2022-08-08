@@ -1,0 +1,13 @@
+curl https://curlent-payment.vercel.app/api/v1/transfers \ 
+    -d amount=100 \
+    -d currency="usd" \
+    -d destination="0x5593572e312C4F8Fc2fe924907624B39D1d6B65c" \
+{
+    "id":"clp-b6a74197-4847-442d-9c71-9834badb43a6",
+    "object":"transfers",
+    "amount":100,
+    "currency":"USD",
+    "destination":"0x5593572e312C4F8Fc2fe924907624B39D1d6B65c",
+    "destination_amount":"100",
+    "destination_currency":"USDC"
+}
